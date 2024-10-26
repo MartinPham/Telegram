@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.voiceengine;
+package tg.org.webrtc.voiceengine;
 
 import android.annotation.TargetApi;
 import android.media.AudioAttributes;
@@ -27,8 +27,8 @@ import java.util.Arrays;
 
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.voip.VideoCapturerDevice;
-import org.webrtc.Logging;
-import org.webrtc.ThreadUtils;
+import tg.org.webrtc.Logging;
+import tg.org.webrtc.ThreadUtils;
 
 public class WebRtcAudioRecord {
 

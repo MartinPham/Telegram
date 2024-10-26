@@ -8,10 +8,10 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import androidx.annotation.Nullable;
-import org.webrtc.MediaStreamTrack;
+import tg.org.webrtc.MediaStreamTrack;
 
 /** Java wrapper for a C++ RtpReceiverInterface. */
 public class RtpReceiver {

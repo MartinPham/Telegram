@@ -8,11 +8,11 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import androidx.annotation.Nullable;
-import org.webrtc.VideoFrame;
-import org.webrtc.VideoProcessor;
+import tg.org.webrtc.VideoFrame;
+import tg.org.webrtc.VideoProcessor;
 
 /**
  * This class is meant to be a simple layer that only handles the JNI wrapping of a C++

@@ -33,8 +33,8 @@ import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.MotionBackgroundDrawable;
 import org.telegram.ui.GroupCallActivity;
-import org.webrtc.RendererCommon;
-import org.webrtc.TextureViewRenderer;
+import tg.org.webrtc.RendererCommon;
+import tg.org.webrtc.TextureViewRenderer;
 
 import java.io.File;
 import java.io.FileOutputStream;

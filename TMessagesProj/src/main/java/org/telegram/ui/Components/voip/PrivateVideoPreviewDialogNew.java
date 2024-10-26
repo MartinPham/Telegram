@@ -48,7 +48,7 @@ import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.MotionBackgroundDrawable;
 import org.telegram.ui.LaunchActivity;
-import org.webrtc.RendererCommon;
+import tg.org.webrtc.RendererCommon;
 
 import java.io.File;
 import java.io.FileOutputStream;

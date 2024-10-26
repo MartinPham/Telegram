@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import android.annotation.TargetApi;
 import android.graphics.SurfaceTexture;
@@ -21,7 +21,7 @@ import android.opengl.EGLSurface;
 import android.os.Build;
 import androidx.annotation.Nullable;
 import android.view.Surface;
-import org.webrtc.EglBase;
+import tg.org.webrtc.EglBase;
 
 /**
  * Holds EGL state and utility methods for handling an EGL14 EGLContext, an EGLDisplay,

@@ -1,4 +1,4 @@
-package org.webrtc;
+package tg.org.webrtc;
 
 import android.content.Context;
 import android.content.res.Resources;

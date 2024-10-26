@@ -8,11 +8,11 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.audio;
+package tg.org.webrtc.audio;
 
 import android.media.AudioTrack;
 import android.os.Build;
-import org.webrtc.Logging;
+import tg.org.webrtc.Logging;
 
 // Lowers the buffer size if no underruns are detected for 100 ms. Once an
 // underrun is detected, the buffer size is increased by 10 ms and it will not

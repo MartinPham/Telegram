@@ -8,14 +8,14 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
-import static org.webrtc.MediaCodecUtils.EXYNOS_PREFIX;
-import static org.webrtc.MediaCodecUtils.EXYNOS_PREFIX_C2;
-import static org.webrtc.MediaCodecUtils.HISI_PREFIX;
-import static org.webrtc.MediaCodecUtils.INTEL_PREFIX;
-import static org.webrtc.MediaCodecUtils.QCOM_PREFIX;
-import static org.webrtc.MediaCodecUtils.SOFTWARE_IMPLEMENTATION_PREFIXES;
+import static tg.org.webrtc.MediaCodecUtils.EXYNOS_PREFIX;
+import static tg.org.webrtc.MediaCodecUtils.EXYNOS_PREFIX_C2;
+import static tg.org.webrtc.MediaCodecUtils.HISI_PREFIX;
+import static tg.org.webrtc.MediaCodecUtils.INTEL_PREFIX;
+import static tg.org.webrtc.MediaCodecUtils.QCOM_PREFIX;
+import static tg.org.webrtc.MediaCodecUtils.SOFTWARE_IMPLEMENTATION_PREFIXES;
 
 import android.media.MediaCodecInfo;
 import android.os.Build;

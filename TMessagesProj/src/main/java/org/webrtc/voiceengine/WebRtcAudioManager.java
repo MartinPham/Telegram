@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.voiceengine;
+package tg.org.webrtc.voiceengine;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -20,8 +20,8 @@ import android.os.Build;
 import androidx.annotation.Nullable;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.webrtc.ContextUtils;
-import org.webrtc.Logging;
+import tg.org.webrtc.ContextUtils;
+import tg.org.webrtc.Logging;
 
 // WebRtcAudioManager handles tasks that uses android.media.AudioManager.
 // At construction, storeAudioParameters() is called and it retrieves

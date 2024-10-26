@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 /**
  * Class for holding the native pointer of a histogram. Since there is no way to destroy a

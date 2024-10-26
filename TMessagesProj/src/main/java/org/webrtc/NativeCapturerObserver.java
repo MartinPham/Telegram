@@ -8,9 +8,9 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
-import org.webrtc.VideoFrame;
+import tg.org.webrtc.VideoFrame;
 
 /**
  * Used from native api and implements a simple VideoCapturer.CapturerObserver that feeds frames to

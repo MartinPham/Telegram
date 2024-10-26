@@ -8,11 +8,11 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import androidx.annotation.Nullable;
 import java.util.Arrays;
-import org.webrtc.PeerConnection;
+import tg.org.webrtc.PeerConnection;
 
 /**
  * Representation of a single ICE Candidate, mirroring

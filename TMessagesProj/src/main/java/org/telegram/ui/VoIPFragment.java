@@ -119,10 +119,10 @@ import org.telegram.ui.Components.voip.VoIpCoverView;
 import org.telegram.ui.Components.voip.VoIpSnowView;
 import org.telegram.ui.Components.voip.VoIpSwitchLayout;
 import org.telegram.ui.Stories.recorder.HintView2;
-import org.webrtc.EglBase;
-import org.webrtc.GlRectDrawer;
-import org.webrtc.RendererCommon;
-import org.webrtc.TextureViewRenderer;
+import tg.org.webrtc.EglBase;
+import tg.org.webrtc.GlRectDrawer;
+import tg.org.webrtc.RendererCommon;
+import tg.org.webrtc.TextureViewRenderer;
 
 import java.io.ByteArrayOutputStream;
 import java.security.Permission;

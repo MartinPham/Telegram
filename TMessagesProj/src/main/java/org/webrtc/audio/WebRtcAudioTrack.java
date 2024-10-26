@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.audio;
+package tg.org.webrtc.audio;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -20,13 +20,13 @@ import android.os.Build;
 import android.os.Process;
 import androidx.annotation.Nullable;
 import java.nio.ByteBuffer;
-import org.webrtc.CalledByNative;
-import org.webrtc.Logging;
-import org.webrtc.ThreadUtils;
-import org.webrtc.audio.JavaAudioDeviceModule.AudioTrackErrorCallback;
-import org.webrtc.audio.JavaAudioDeviceModule.AudioTrackStartErrorCode;
-import org.webrtc.audio.JavaAudioDeviceModule.AudioTrackStateCallback;
-import org.webrtc.audio.LowLatencyAudioBufferManager;
+import tg.org.webrtc.CalledByNative;
+import tg.org.webrtc.Logging;
+import tg.org.webrtc.ThreadUtils;
+import tg.org.webrtc.audio.JavaAudioDeviceModule.AudioTrackErrorCallback;
+import tg.org.webrtc.audio.JavaAudioDeviceModule.AudioTrackStartErrorCode;
+import tg.org.webrtc.audio.JavaAudioDeviceModule.AudioTrackStateCallback;
+import tg.org.webrtc.audio.LowLatencyAudioBufferManager;
 
 class WebRtcAudioTrack {
   private static final String TAG = "WebRtcAudioTrackExternal";

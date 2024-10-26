@@ -5,8 +5,8 @@ import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.FileLog;
 import org.telegram.messenger.SharedConfig;
-import org.webrtc.ContextUtils;
-import org.webrtc.VideoSink;
+import tg.org.webrtc.ContextUtils;
+import tg.org.webrtc.VideoSink;
 
 import java.nio.ByteBuffer;
 import java.util.concurrent.CountDownLatch;

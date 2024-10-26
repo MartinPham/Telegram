@@ -13,7 +13,7 @@
 
 namespace webrtc {
 
-// GENERATED_JAVA_ENUM_PACKAGE: org.webrtc
+// GENERATED_JAVA_ENUM_PACKAGE: tg.org.webrtc
 enum class Priority {
   kVeryLow,
   kLow,

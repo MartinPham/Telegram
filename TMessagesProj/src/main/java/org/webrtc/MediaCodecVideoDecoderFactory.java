@@ -8,10 +8,10 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
-import static org.webrtc.MediaCodecUtils.EXYNOS_PREFIX;
-import static org.webrtc.MediaCodecUtils.QCOM_PREFIX;
+import static tg.org.webrtc.MediaCodecUtils.EXYNOS_PREFIX;
+import static tg.org.webrtc.MediaCodecUtils.QCOM_PREFIX;
 
 import android.media.MediaCodecInfo;
 import android.media.MediaCodecInfo.CodecCapabilities;

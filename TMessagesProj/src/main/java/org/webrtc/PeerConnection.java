@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
@@ -17,10 +17,10 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import org.webrtc.CandidatePairChangeEvent;
-import org.webrtc.DataChannel;
-import org.webrtc.MediaStreamTrack;
-import org.webrtc.RtpTransceiver;
+import tg.org.webrtc.CandidatePairChangeEvent;
+import tg.org.webrtc.DataChannel;
+import tg.org.webrtc.MediaStreamTrack;
+import tg.org.webrtc.RtpTransceiver;
 
 /**
  * Java-land version of the PeerConnection APIs; wraps the C++ API

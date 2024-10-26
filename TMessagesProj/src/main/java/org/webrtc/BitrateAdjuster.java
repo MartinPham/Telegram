@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 /** Object that adjusts the bitrate of a hardware codec. */
 interface BitrateAdjuster {

@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 /**
  * This class creates a native {@code webrtc::AudioEncoderFactory} with the builtin audio encoders.

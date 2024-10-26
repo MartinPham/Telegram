@@ -66,8 +66,8 @@ import org.telegram.ui.Components.MotionBackgroundDrawable;
 import org.telegram.ui.Components.RLottieImageView;
 import org.telegram.ui.Components.RecyclerListView;
 import org.telegram.ui.GroupCallActivity;
-import org.webrtc.GlGenericDrawer;
-import org.webrtc.RendererCommon;
+import tg.org.webrtc.GlGenericDrawer;
+import tg.org.webrtc.RendererCommon;
 
 import java.util.ArrayList;
 

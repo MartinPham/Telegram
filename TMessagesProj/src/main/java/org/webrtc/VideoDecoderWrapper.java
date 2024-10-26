@@ -8,9 +8,9 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
-import org.webrtc.VideoDecoder;
+import tg.org.webrtc.VideoDecoder;
 
 /**
  * This class contains the Java glue code for JNI generation of VideoDecoder.

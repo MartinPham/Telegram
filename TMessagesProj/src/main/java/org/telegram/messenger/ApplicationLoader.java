@@ -34,8 +34,13 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.multidex.MultiDex;
 
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastSession;
+import com.google.android.gms.cast.framework.SessionManager;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import org.json.JSONObject;
 import org.telegram.messenger.voip.VideoCapturerDevice;
@@ -51,6 +56,8 @@ import org.telegram.ui.LauncherIconController;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Locale;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 public class ApplicationLoader extends Application {
 
@@ -256,6 +263,7 @@ public class ApplicationLoader extends Application {
 
     @Override
     public void onCreate() {
+
         applicationLoaderInstance = this;
         try {
             applicationContext = getApplicationContext();

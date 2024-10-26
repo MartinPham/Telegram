@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.voiceengine;
+package tg.org.webrtc.voiceengine;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -23,9 +23,9 @@ import android.util.Log;
 import androidx.annotation.Nullable;
 
 import org.telegram.messenger.FileLog;
-import org.webrtc.ContextUtils;
-import org.webrtc.Logging;
-import org.webrtc.ThreadUtils;
+import tg.org.webrtc.ContextUtils;
+import tg.org.webrtc.Logging;
+import tg.org.webrtc.ThreadUtils;
 
 import java.nio.ByteBuffer;
 

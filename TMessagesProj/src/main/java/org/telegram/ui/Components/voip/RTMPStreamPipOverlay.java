@@ -58,7 +58,7 @@ import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.LayoutHelper;
 import org.telegram.ui.Components.SimpleFloatPropertyCompat;
 import org.telegram.ui.LaunchActivity;
-import org.webrtc.RendererCommon;
+import tg.org.webrtc.RendererCommon;
 
 import java.util.ArrayList;
 import java.util.List;

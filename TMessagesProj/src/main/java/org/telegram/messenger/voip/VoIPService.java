@@ -127,9 +127,9 @@ import org.telegram.ui.LaunchActivity;
 import org.telegram.ui.VoIPFeedbackActivity;
 import org.telegram.ui.VoIPFragment;
 import org.telegram.ui.VoIPPermissionActivity;
-import org.webrtc.VideoFrame;
-import org.webrtc.VideoSink;
-import org.webrtc.voiceengine.WebRtcAudioTrack;
+import tg.org.webrtc.VideoFrame;
+import tg.org.webrtc.VideoSink;
+import tg.org.webrtc.voiceengine.WebRtcAudioTrack;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;

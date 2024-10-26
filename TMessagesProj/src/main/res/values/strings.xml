@@ -8179,4 +8179,7 @@
     <string name="Gift2ButtonSendGift">send a gift</string>
     <string name="Gift2ButtonSell_one">sell for %d Star</string>
     <string name="Gift2ButtonSell_other">sell for %d Stars</string>
+    <string name="BotStartHint">Tap here to use this bot</string>
+    <string name="VoipGroupNotifyMe">Notify Me</string>
+    <string name="VoipGroupNotifyMessage">You will be notified when the live stream starts</string>
 </resources>

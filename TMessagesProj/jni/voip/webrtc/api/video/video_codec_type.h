@@ -13,7 +13,7 @@
 
 namespace webrtc {
 
-// GENERATED_JAVA_ENUM_PACKAGE: org.webrtc
+// GENERATED_JAVA_ENUM_PACKAGE: tg.org.webrtc
 #ifndef DISABLE_H265
 enum VideoCodecType {
   // There are various memset(..., 0, ...) calls in the code that rely on

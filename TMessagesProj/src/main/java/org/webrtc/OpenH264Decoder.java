@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 public class OpenH264Decoder extends WrappedNativeVideoDecoder {
   @Override

@@ -8,10 +8,10 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.audio;
+package tg.org.webrtc.audio;
 
-import org.webrtc.voiceengine.WebRtcAudioRecord;
-import org.webrtc.voiceengine.WebRtcAudioTrack;
+import tg.org.webrtc.voiceengine.WebRtcAudioRecord;
+import tg.org.webrtc.voiceengine.WebRtcAudioTrack;
 
 /**
  * This class represents the legacy AudioDeviceModule that is currently hardcoded into C++ WebRTC.

@@ -8,6 +8,7 @@
 
 package org.telegram.ui;
 
+import static android.content.Context.WIFI_SERVICE;
 import static org.telegram.messenger.AndroidUtilities.dp;
 import static org.telegram.messenger.AndroidUtilities.lerp;
 import static org.telegram.messenger.LocaleController.getString;
@@ -23,6 +24,7 @@ import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -57,7 +59,9 @@ import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
+import android.media.session.MediaSession;
 import android.net.Uri;
+import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -81,6 +85,7 @@ import android.transition.TransitionManager;
 import android.transition.TransitionSet;
 import android.transition.TransitionValues;
 import android.util.FloatProperty;
+import android.util.Log;
 import android.util.Pair;
 import android.util.Property;
 import android.util.Range;
@@ -90,6 +95,7 @@ import android.view.ContextThemeWrapper;
 import android.view.Gravity;
 import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.OrientationEventListener;
 import android.view.Surface;
@@ -133,6 +139,14 @@ import androidx.dynamicanimation.animation.DynamicAnimation;
 import androidx.dynamicanimation.animation.FloatValueHolder;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
+import androidx.media3.cast.CastPlayer;
+import androidx.media3.common.MimeTypes;
+import androidx.mediarouter.app.MediaRouteActionProvider;
+import androidx.mediarouter.app.MediaRouteButton;
+import androidx.mediarouter.app.MediaRouteDialogFactory;
+import androidx.mediarouter.media.MediaControlIntent;
+import androidx.mediarouter.media.MediaRouteSelector;
+import androidx.mediarouter.media.MediaRouter;
 import androidx.recyclerview.widget.DefaultItemAnimator;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScrollerEnd;
@@ -140,8 +154,25 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.exoplayer2.C;
 import com.google.android.exoplayer2.ExoPlayer;
+//import com.google.android.exoplayer2.MediaItem;
+
+import androidx.media3.common.MediaItem;
 import com.google.android.exoplayer2.analytics.AnalyticsListener;
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.gms.cast.CastMediaControlIntent;
+import com.google.android.gms.cast.MediaInfo;
+import com.google.android.gms.cast.MediaLoadRequestData;
+import com.google.android.gms.cast.MediaMetadata;
+import com.google.android.gms.cast.framework.CastButtonFactory;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastSession;
+import com.google.android.gms.cast.framework.OptionsProvider;
+import com.google.android.gms.cast.framework.SessionManager;
+import com.google.android.gms.cast.framework.SessionManagerListener;
+import com.google.android.gms.cast.framework.media.CastMediaOptions;
+import com.google.android.gms.cast.framework.media.RemoteMediaClient;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
@@ -281,8 +312,13 @@ import org.telegram.ui.Stories.recorder.KeyboardNotifier;
 import org.telegram.ui.Stories.recorder.StoryEntry;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
@@ -293,6 +329,11 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
+//import java.util.concurrent.Executor;
+//import java.util.concurrent.Executors;
+//
+//import fi.iki.elonen.NanoHTTPD;
+
 
 @SuppressLint("WrongConstant")
 @SuppressWarnings("unchecked")
@@ -345,6 +386,202 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     public SurfaceView getVideoSurfaceView() {
         return videoSurfaceView;
     }
+
+    /*
+    public void castSessionStarted(CastSession session) {
+
+        try {
+            videoServer.start();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        videoServer.setFile(new File(currentPlayingVideoFile.getPath()));
+
+        String localUrl = "http://" + videoServer.getDeviceIpAddress() + ":" + videoServer.getListeningPort();
+
+        try {
+            throw new Exception(localUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
+        mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Telegram");
+
+        MediaInfo mediaInfo = new MediaInfo.Builder(localUrl)
+                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                .setContentType("video/mp4")
+                .setMetadata(mediaMetadata)
+                .build();
+
+        RemoteMediaClient remoteMediaClient = session.getRemoteMediaClient();
+        remoteMediaClient.load(
+                new MediaLoadRequestData.Builder()
+                        .setMediaInfo(mediaInfo)
+                        .setAutoplay(true)
+                        .build()
+        );
+
+
+        MediaItem item = new MediaItem.Builder()
+                                .setUri(Uri.parse(localUrl))
+                                .setMimeType(MimeTypes.VIDEO_MP4)
+                                .setMediaMetadata(new androidx.media3.common.MediaMetadata.Builder()
+                                        .setTitle("Video")
+                                        .setArtist("Telegram")
+                                        .setIsBrowsable(false)
+                                        .setIsPlayable(true)
+                                        .build())
+                                .build();
+        List<MediaItem> mediaItems = Arrays.asList(item);
+        castPlayer.setMediaItems(mediaItems, true);
+        castPlayer.prepare();
+        castPlayer.play();
+
+
+
+        MediaItem item = new MediaItem.Builder()
+//                .setUri(currentPlayingVideoFile)
+                .setUri(Uri.parse("http://192.168.1.11:8080/mp4/test2.mp4"))
+//                .setUri(Uri.parse("https://web-home.mph.am/mp4/test2.mp4"))
+//                .setUri(Uri.parse("http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"))
+                .setMimeType(MimeTypes.VIDEO_MP4)
+                .setMediaMetadata(new androidx.media3.common.MediaMetadata.Builder()
+                        .setTitle("Video")
+                        .setArtist("Telegram")
+                        .setIsBrowsable(false)
+                        .setIsPlayable(true)
+                        .build())
+                .build();
+        List<MediaItem> mediaItems = Arrays.asList(item);
+        castPlayer.setMediaItems(mediaItems, true);
+        castPlayer.prepare();
+        castPlayer.play();
+
+
+        MediaMetadata mediaMetadata = new MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE);
+        mediaMetadata.putString(MediaMetadata.KEY_TITLE, "Telegram");
+
+        MediaInfo mediaInfo = new MediaInfo.Builder("https://web-home.mph.am/mp4/test2.mp4")
+                .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
+                .setContentType("video/mp4")
+                .setMetadata(mediaMetadata)
+                .build();
+
+        RemoteMediaClient remoteMediaClient = session.getRemoteMediaClient();
+        remoteMediaClient.load(
+                new MediaLoadRequestData.Builder()
+                        .setMediaInfo(mediaInfo)
+                        .setAutoplay(true)
+                        .build()
+        );
+
+    }
+
+    public void castSessionEnded(CastSession session) {
+
+        try {
+            videoServer.stop();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+        castPlayer.stop();
+
+    }
+*/
+    /*
+    private VideoServer videoServer;
+    private class VideoServer extends NanoHTTPD {
+
+        private File videoFile;
+
+        public VideoServer(int port) {
+            super(port);
+        }
+
+        public void setFile(File file) {
+            this.videoFile = file;
+        }
+
+        public String getDeviceIpAddress() {
+            WifiManager wm = (WifiManager) activityContext.getApplicationContext().getSystemService(WIFI_SERVICE);
+            int ipAddress = wm.getConnectionInfo().getIpAddress();
+            return String.format("%d.%d.%d.%d", (ipAddress & 0xff), (ipAddress >> 8 & 0xff),
+                    (ipAddress >> 16 & 0xff), (ipAddress >> 24 & 0xff));
+        }
+
+        @Override
+        public Response serve(IHTTPSession session) {
+            try {
+                FileInputStream fis = new FileInputStream(videoFile);
+
+                Response response = newChunkedResponse(Response.Status.OK, "video/mp4", fis);
+                response.addHeader("Content-Type", "video/mp4");
+                response.addHeader("Content-Length", String.valueOf(videoFile.length()));
+                response.addHeader("Access-Control-Allow-Origin", "*");
+                response.addHeader("Access-Control-Expose-Headers", "origin");
+
+                return response;
+            } catch (IOException e) {
+                e.printStackTrace();
+                return newFixedLengthResponse(Response.Status.INTERNAL_ERROR, MIME_PLAINTEXT, "Error loading file");
+            }
+        }
+    }
+    */
+
+
+
+    private MediaRouteButton mediaRouteButton;
+    private CastRTC castRtc;
+
+    /*
+
+    private class SessionManagerListenerImpl implements SessionManagerListener<CastSession> {
+        private PhotoViewer photoViewerInstance;
+        public SessionManagerListenerImpl(PhotoViewer photoViewerInstance) {
+            this.photoViewerInstance = photoViewerInstance;
+        }
+
+        @Override
+        public void onSessionStarting(CastSession session) {
+        }
+        @Override
+        public void onSessionStarted(CastSession session, String sessionId) {
+            this.photoViewerInstance.castSessionStarted(session);
+        }
+        @Override
+        public void onSessionStartFailed(CastSession session, int error) {
+        }
+        @Override
+        public void onSessionSuspended(CastSession session, int reason) {}
+        @Override
+        public void onSessionResuming(CastSession session, String sessionId) {}
+        @Override
+        public void onSessionResumed(CastSession session, boolean wasSuspended) {
+
+        }
+        @Override
+        public void onSessionResumeFailed(CastSession session, int error) {}
+        @Override
+        public void onSessionEnding(CastSession session) {
+        }
+        @Override
+        public void onSessionEnded(CastSession session, int error) {
+            this.photoViewerInstance.castSessionEnded(session);
+
+        }
+    }
+    private CastContext castContext;
+    private SessionManager sessionManager;
+    private SessionManagerListener<CastSession> sessionManagerListener =
+            new SessionManagerListenerImpl(this);
+    private MediaRouteSelector routeSelector;
+    private CastPlayer castPlayer;
+     */
 
     private static class PhotoViewerActionBarContainer extends FrameLayout implements NotificationCenter.NotificationCenterDelegate {
 
@@ -815,6 +1052,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private ActionBarMenuItem sendItem;
     private ActionBarMenuItem editItem;
     private ActionBarMenuItem pipItem;
+    private ActionBarMenuItem castItem;
     private ActionBarMenuItem masksItem;
     private LinearLayout itemsLayout;
     private ChooseQualityLayout.QualityIcon qualityIcon;
@@ -2007,6 +2245,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     private final static int gallery_menu_translate = 21;
     private final static int gallery_menu_hide_translation = 22;
     private final static int gallery_menu_reply = 23;
+    private final static int gallery_menu_cast = 24;
 
     private final static int ads_sponsor_info = 101;
     private final static int ads_about = 102;
@@ -5279,6 +5518,8 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                         }
                     };
                     masksAlert.show();
+                }  else if (id == gallery_menu_cast) {
+                    mediaRouteButton.showDialog();
                 } else if (id == gallery_menu_pip) {
                     if (pipItem.getAlpha() != 1.0f) {
                         return;
@@ -5478,6 +5719,62 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         masksItem.setContentDescription(getString("Masks", R.string.Masks));
         pipItem = menu.addItem(gallery_menu_pip, R.drawable.ic_goinline);
         pipItem.setContentDescription(getString("AccDescrPipMode", R.string.AccDescrPipMode));
+        castItem = menu.addItem(gallery_menu_cast, R.drawable.cast_ic_notification_on);
+        castItem.setContentDescription(getString("AccDescrPipMode", R.string.AccDescrPipMode));
+
+
+        castRtc = new CastRTC(activityContext, message -> {
+            castVideoFile(currentPlayingVideoFile);
+        });
+        mediaRouteButton = castRtc.createCastButton();
+        containerView.addView(mediaRouteButton);
+        castRtc.decorateCastButton(mediaRouteButton);
+        castRtc.setupCast();
+
+        /*
+        mediaRouteButton = new MediaRouteButton(activityContext);
+        mediaRouteButton.setAlwaysVisible(true);
+        routeSelector = new MediaRouteSelector.Builder()
+                .addControlCategory(MediaControlIntent.CATEGORY_REMOTE_PLAYBACK)
+                .addControlCategory(MediaControlIntent.CATEGORY_LIVE_VIDEO)
+                .build();
+        mediaRouteButton.setRouteSelector(routeSelector);
+        FrameLayout.LayoutParams layoutParams = new FrameLayout.LayoutParams(AndroidUtilities.dp(60), AndroidUtilities.dp(60));
+        layoutParams.gravity = Gravity.BOTTOM | Gravity.END;
+        layoutParams.setMargins(0, 0, -AndroidUtilities.dp(600), -AndroidUtilities.dp(600));
+        mediaRouteButton.setLayoutParams(layoutParams);
+        mediaRouteButton.setBackgroundColor(Color.WHITE);
+        mediaRouteButton.setClipToOutline(true);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mediaRouteButton.setOutlineProvider(new ViewOutlineProvider() {
+                @Override
+                public void getOutline(View view, Outline outline) {
+                    outline.setOval(0, 0, view.getWidth(), view.getHeight());
+                }
+            });
+        }
+
+        containerView.addView(mediaRouteButton);
+        CastButtonFactory.setUpMediaRouteButton(activityContext, mediaRouteButton);
+
+        Executor castExecutor = Executors.newSingleThreadExecutor();
+        Task<CastContext> castContextTask = CastContext.getSharedInstance(parentActivity.getApplicationContext(), castExecutor);
+        castContextTask.addOnCompleteListener(
+                new OnCompleteListener<CastContext>() {
+                    @Override
+                    public void onComplete(Task<CastContext> task) {
+                        castContext = task.getResult();
+//                        videoServer = new VideoServer(8080);
+                        castPlayer = new CastPlayer(castContext);
+                        sessionManager = castContext.getSessionManager();
+                        sessionManager.addSessionManagerListener(sessionManagerListener, CastSession.class);
+
+                    }
+                });
+         */
+
+
+
         editItem = menu.addItem(gallery_menu_paint, R.drawable.msg_header_draw);
         editItem.setContentDescription(getString("AccDescrPhotoEditor", R.string.AccDescrPhotoEditor));
         sendItem = menu.addItem(gallery_menu_send, R.drawable.msg_header_share);
@@ -7039,6 +7336,29 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         }
         textSelectionHelper.setParentView(containerView);
         textSelectionHelper.setInvalidateParent();
+    }
+
+    private void castVideoFile(Uri uri) {
+        ContentResolver contentResolver = activityContext.getContentResolver();
+
+        try (InputStream inputStream = contentResolver.openInputStream(uri);
+             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+
+            if (inputStream == null) {
+                throw new IOException("Unable to open InputStream for URI: " + uri);
+            }
+
+            byte[] data = new byte[1024];
+            int nRead;
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            byte[] file = buffer.toByteArray();
+
+            castRtc.playMedia(file, "video/mp4", "Video");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private Bulletin limitBulletin;
@@ -9268,9 +9588,15 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
     }
 
     private void preparePlayer(ArrayList<VideoPlayer.Quality> videoUrises, Uri uri, boolean playWhenReady, boolean preview, MediaController.SavedFilterState savedFilterState) {
+
+
         if (!preview) {
             currentPlayingVideoFile = uri;
             currentPlayingVideoQualityFiles = videoUrises;
+
+            if (castRtc != null && castRtc.connected) {
+                castVideoFile(currentPlayingVideoFile);
+            }
         }
         if (parentActivity == null) {
             return;
@@ -13217,6 +13543,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
                     menuItem.showSubItem(gallery_menu_openin);
                     setItemVisible(editItem, false, false);
                     setItemVisible(pipItem, true, false);
+                    setItemVisible(castItem, true, false);
                 } else if (isVideo) {
                     if (!noforwards || (slideshowMessageId == 0 ? MessageObject.getMedia(newMessageObject.messageOwner).webpage != null && MessageObject.getMedia(newMessageObject.messageOwner).webpage.url != null :
                             MessageObject.getMedia(imagesArr.get(0).messageOwner).webpage != null && MessageObject.getMedia(imagesArr.get(0).messageOwner).webpage.url != null)) {

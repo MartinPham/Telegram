@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 /**
  * Empty class for use in libjingle_peerconnection_java because all targets require at least one

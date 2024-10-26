@@ -7,8 +7,8 @@ import org.json.JSONObject;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.BuildVars;
 import org.telegram.messenger.FileLog;
-import org.webrtc.ContextUtils;
-import org.webrtc.VideoSink;
+import tg.org.webrtc.ContextUtils;
+import tg.org.webrtc.VideoSink;
 
 import java.util.Arrays;
 import java.util.List;

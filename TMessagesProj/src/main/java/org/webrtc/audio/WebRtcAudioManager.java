@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.audio;
+package tg.org.webrtc.audio;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
@@ -17,8 +17,8 @@ import android.media.AudioManager;
 import android.media.AudioRecord;
 import android.media.AudioTrack;
 import android.os.Build;
-import org.webrtc.Logging;
-import org.webrtc.CalledByNative;
+import tg.org.webrtc.Logging;
+import tg.org.webrtc.CalledByNative;
 
 /**
  * This class contains static functions to query sample rate and input/output audio buffer sizes.

@@ -14,17 +14,17 @@ import android.view.WindowManager;
 import org.telegram.messenger.AndroidUtilities;
 import org.telegram.messenger.ApplicationLoader;
 import org.telegram.messenger.FileLog;
-import org.webrtc.Camera1Enumerator;
-import org.webrtc.Camera2Enumerator;
-import org.webrtc.CameraEnumerator;
-import org.webrtc.CameraVideoCapturer;
-import org.webrtc.CapturerObserver;
-import org.webrtc.EglBase;
-import org.webrtc.Logging;
-import org.webrtc.ScreenCapturerAndroid;
-import org.webrtc.SurfaceTextureHelper;
-import org.webrtc.VideoCapturer;
-import org.webrtc.voiceengine.WebRtcAudioRecord;
+import tg.org.webrtc.Camera1Enumerator;
+import tg.org.webrtc.Camera2Enumerator;
+import tg.org.webrtc.CameraEnumerator;
+import tg.org.webrtc.CameraVideoCapturer;
+import tg.org.webrtc.CapturerObserver;
+import tg.org.webrtc.EglBase;
+import tg.org.webrtc.Logging;
+import tg.org.webrtc.ScreenCapturerAndroid;
+import tg.org.webrtc.SurfaceTextureHelper;
+import tg.org.webrtc.VideoCapturer;
+import tg.org.webrtc.voiceengine.WebRtcAudioRecord;
 
 @TargetApi(18)
 public class VideoCapturerDevice {

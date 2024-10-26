@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -29,7 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import org.webrtc.CameraEnumerationAndroid.CaptureFormat;
+import tg.org.webrtc.CameraEnumerationAndroid.CaptureFormat;
 
 @TargetApi(21)
 class Camera2Session implements CameraSession {

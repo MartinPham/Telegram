@@ -26,6 +26,7 @@ dependencies {
     implementation "androidx.sharetarget:sharetarget:1.2.0"
     implementation 'androidx.interpolator:interpolator:1.0.0'
     implementation 'androidx.biometric:biometric:1.1.0'
+    implementation 'androidx.media3:media3-common:1.4.1'
 
     compileOnly 'org.checkerframework:checker-qual:2.5.2'
     compileOnly 'org.checkerframework:checker-compat-qual:2.5.0'
@@ -60,6 +61,14 @@ dependencies {
     }
 
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
+
+    implementation 'androidx.mediarouter:mediarouter:1.7.0'
+    implementation 'com.google.android.gms:play-services-cast-framework:21.4.0'
+    implementation 'androidx.media3:media3-cast:1.4.1'
+//    implementation 'org.nanohttpd:nanohttpd:2.3.1'
+//    implementation 'org.webrtc:google-webrtc:1.0.30039@aar'
+    implementation files('../TMessagesProj/libs/google-webrtc-1.0.30039.aar')
 }
 
 def isWindows = String.valueOf(DefaultNativePlatform.currentOperatingSystem.toFamilyName() == OperatingSystemFamily.WINDOWS)

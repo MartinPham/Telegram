@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 /** Simplest possible GL shader that just draws frames as opaque quads. */
 public class GlRectDrawer extends GlGenericDrawer {

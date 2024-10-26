@@ -8,11 +8,11 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 // Explicit imports necessary for JNI generation.
 import androidx.annotation.Nullable;
-import org.webrtc.VideoEncoder;
+import tg.org.webrtc.VideoEncoder;
 
 /**
  * This class contains the Java glue code for JNI generation of VideoEncoder.

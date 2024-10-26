@@ -560,6 +560,9 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
         default void didPressSideButton(ChatMessageCell cell) {
         }
 
+        default void didLongPressSideButton(ChatMessageCell cell, float x, float y) {
+        }
+
         default void didPressOther(ChatMessageCell cell, float otherX, float otherY) {
         }
 
@@ -10054,6 +10057,12 @@ public class ChatMessageCell extends BaseCell implements SeekBar.SeekBarDelegate
             videoButtonPressed = 0;
             pressedBotButton = -1;
             invalidate();
+        }
+
+        if (sideButtonPressed) {
+            hadLongPress = true;
+            delegate.didLongPressSideButton(this, lastTouchX, lastTouchY);
+            return true;
         }
 
         linkPreviewPressed = false;

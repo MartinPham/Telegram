@@ -123,6 +123,7 @@ import org.telegram.ui.Components.AudioPlayerAlert;
 import org.telegram.ui.Components.AvatarDrawable;
 import org.telegram.ui.Components.BackupImageView;
 import org.telegram.ui.Components.BlobDrawable;
+import org.telegram.ui.Components.BulletinFactory;
 import org.telegram.ui.Components.CheckBoxSquare;
 import org.telegram.ui.Components.CubicBezierInterpolator;
 import org.telegram.ui.Components.EditTextBoldCursor;
@@ -157,7 +158,7 @@ import org.telegram.ui.Components.voip.RTMPStreamPipOverlay;
 import org.telegram.ui.Components.voip.VoIPTextureView;
 import org.telegram.ui.Components.voip.VoIPToggleButton;
 import org.telegram.ui.Stories.recorder.DominantColors;
-import org.webrtc.voiceengine.WebRtcAudioTrack;
+import tg.org.webrtc.voiceengine.WebRtcAudioTrack;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -1762,6 +1763,27 @@ public class GroupCallActivity extends BottomSheet implements NotificationCenter
         }
         if (schedulePeer != null) {
             ChatObject.Call call = account.getMessagesController().getGroupCall(scheduleChat.id, false);
+
+            if (!ChatObject.canManageCalls(scheduleChat)) {
+                if (!call.call.schedule_start_subscribed) {
+                    TLRPC.TL_phone_toggleGroupCallStartSubscription req = new TLRPC.TL_phone_toggleGroupCallStartSubscription();
+                    req.call = call.getInputGroupCall();
+                    call.call.schedule_start_subscribed = !call.call.schedule_start_subscribed;
+                    req.subscribed = call.call.schedule_start_subscribed;
+                    account.getConnectionsManager().sendRequest(req, (response, error) -> {
+                        if (response != null) {
+                            account.getMessagesController().processUpdates((TLRPC.Updates) response, false);
+                        }
+                    });
+
+                    BulletinFactory.of(LaunchActivity.getSafeLastFragment())
+                            .createSimpleBulletin(R.raw.silent_unmute, LocaleController.getString(R.string.VoipGroupNotifyMessage))
+                            .show();
+
+                    return;
+                }
+            }
+
             groupCallInstance = new GroupCallActivity(activity, account, call, scheduleChat, schedulePeer, hasFewPeers, scheduledHash);
         } else {
             ChatObject.Call call = VoIPService.getSharedInstance().groupCall;
@@ -4418,6 +4440,10 @@ public class GroupCallActivity extends BottomSheet implements NotificationCenter
                         }
                     });
                     updateMuteButton(call.call.schedule_start_subscribed ? MUTE_BUTTON_STATE_CANCEL_REMINDER : MUTE_BUTTON_STATE_SET_REMINDER, true);
+
+
+
+
                 } else {
                     if (VoIPService.getSharedInstance() == null || isStillConnecting()) {
                         return;

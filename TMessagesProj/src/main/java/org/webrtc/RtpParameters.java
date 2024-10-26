@@ -8,14 +8,14 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import androidx.annotation.Nullable;
 import java.lang.Double;
 import java.lang.String;
 import java.util.List;
 import java.util.Map;
-import org.webrtc.MediaStreamTrack;
+import tg.org.webrtc.MediaStreamTrack;
 
 /**
  * The parameters for an {@code RtpSender}, as defined in

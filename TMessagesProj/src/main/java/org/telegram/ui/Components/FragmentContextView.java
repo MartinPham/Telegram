@@ -177,6 +177,14 @@ public class FragmentContextView extends FrameLayout implements NotificationCent
             } else {
                 str = AndroidUtilities.formatFullDuration(call.call.schedule_date - currentTime);
             }
+
+            TLRPC.Chat chat = AccountInstance.getInstance(account).getMessagesController().getChat(call.chatId);
+            if (!ChatObject.canManageCalls(chat)) {
+                if (!call.call.schedule_start_subscribed) {
+                    str = LocaleController.getString(R.string.VoipGroupNotifyMe);
+                }
+            }
+
             int width = (int) Math.ceil(gradientTextPaint.measureText(str));
             timeLayout = new StaticLayout(str, gradientTextPaint, width, Layout.Alignment.ALIGN_NORMAL, 1.0f, 0.0f, false);
             AndroidUtilities.runOnUIThread(updateScheduleTimeRunnable, 1000);

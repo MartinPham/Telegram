@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import android.annotation.TargetApi;
 import android.graphics.SurfaceTexture;
@@ -19,9 +19,9 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import androidx.annotation.Nullable;
 import java.util.concurrent.Callable;
-import org.webrtc.EglBase.Context;
-import org.webrtc.TextureBufferImpl.RefCountMonitor;
-import org.webrtc.VideoFrame.TextureBuffer;
+import tg.org.webrtc.EglBase.Context;
+import tg.org.webrtc.TextureBufferImpl.RefCountMonitor;
+import tg.org.webrtc.VideoFrame.TextureBuffer;
 
 /**
  * Helper class for using a SurfaceTexture to create WebRTC VideoFrames. In order to create WebRTC

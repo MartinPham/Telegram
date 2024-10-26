@@ -53,6 +53,7 @@ import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.AudioManager;
 import android.net.Uri;
 import android.os.Build;
@@ -101,8 +102,10 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.HorizontalScrollView;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
@@ -126,6 +129,10 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.exoplayer2.ui.AspectRatioFrameLayout;
+import com.google.android.gms.cast.framework.CastContext;
+import com.google.android.gms.cast.framework.CastSession;
+import com.google.android.gms.cast.framework.SessionManager;
+import com.google.android.gms.cast.framework.SessionManagerListener;
 import com.google.zxing.common.detector.MathUtils;
 
 import org.telegram.PhoneFormat.PhoneFormat;
@@ -166,6 +173,7 @@ import org.telegram.messenger.MessagesStorage;
 import org.telegram.messenger.NotificationCenter;
 import org.telegram.messenger.NotificationsController;
 import org.telegram.messenger.R;
+import org.telegram.messenger.SavedMessagesController;
 import org.telegram.messenger.SecretChatHelper;
 import org.telegram.messenger.SendMessagesHelper;
 import org.telegram.messenger.SharedConfig;
@@ -290,6 +298,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private final static boolean PULL_DOWN_BACK_FRAGMENT = false;
     private final static boolean DISABLE_PROGRESS_VIEW = true;
     private final static int SKELETON_DISAPPEAR_MS = 200;
+    private final static int MAX_QUICK_SHARE_ITEMS = 5;
 
     private static int SKELETON_LIGHT_OVERLAY_ALPHA = 22;
     private static float SKELETON_SATURATION = 1.4f;
@@ -355,6 +364,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private AnimatorSet bottomOverlayAnimation;
     private boolean bottomOverlayChatWaitsReply;
     private BlurredFrameLayout bottomOverlayChat;
+    private HintView2 bottomOverlayChatHint;
     private BlurredFrameLayout bottomMessagesActionContainer;
     @Nullable
     private TextView forwardButton;
@@ -1016,6 +1026,10 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private boolean switchFromTopics;
     private boolean switchingFromTopics;
     private float switchingFromTopicsProgress;
+
+    private RelativeLayout quickShareLayout;
+    private LinearLayout quickShareButtonLayout;
+
 
     private final static int OPTION_RETRY = 0;
     private final static int OPTION_DELETE = 1;
@@ -4516,6 +4530,12 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
             @Override
             public boolean onTouchEvent(MotionEvent e) {
+
+//                quickShareButtonLayout.removeAllViews();
+//                quickShareLayout.removeAllViews();
+//                contentView.removeView(quickShareLayout);
+//                quickShareLayout.setVisibility(View.GONE);
+
                 textSelectionHelper.checkSelectionCancel(e);
                 if (e.getAction() == MotionEvent.ACTION_DOWN) {
                     scrollByTouch = true;
@@ -7953,12 +7973,40 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         bottomOverlayStartButton.setGravity(Gravity.CENTER);
         bottomOverlayStartButton.setTypeface(AndroidUtilities.bold());
         bottomOverlayStartButton.setVisibility(View.GONE);
-        bottomOverlayStartButton.setOnClickListener(v -> bottomOverlayChatText.callOnClick());
+//        bottomOverlayStartButton.setOnClickListener(v -> bottomOverlayChatText.callOnClick());
+        bottomOverlayStartButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                bottomOverlayChatText.callOnClick();
+                bottomOverlayChatHint.hide();
+            }
+        });
         bottomOverlayChat.addView(bottomOverlayStartButton, LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, LayoutHelper.MATCH_PARENT, Gravity.CENTER, 8, 8, 8, 8));
+
+
+        bottomOverlayChatHint = new HintView2(getContext(), HintView2.DIRECTION_BOTTOM);
+        bottomOverlayChatHint.setIcon(R.raw.bot_start);
+        bottomOverlayChatHint.setTextAlign(Layout.Alignment.ALIGN_CENTER);
+        bottomOverlayChatHint.setText(AndroidUtilities.replaceTags(LocaleController.getString(R.string.BotStartHint)));
+        bottomOverlayChatHint.setMaxWidthPx(HintView2.cutInFancyHalf(bottomOverlayChatHint.getText(), bottomOverlayChatHint.getTextPaint()));
+        if (AndroidUtilities.isTablet()) {
+            bottomOverlayChatHint.setJoint(0, 77);
+        } else {
+            bottomOverlayChatHint.setJoint(0.5f, 0);
+        }
+        bottomOverlayChatHint.setDuration(-1);
+        bottomOverlayChatHint.setPadding(dp(8), 0, dp(8), 0);
+
+        FrameLayout.LayoutParams params = LayoutHelper.createFrame(LayoutHelper.MATCH_PARENT, 60, Gravity.BOTTOM | Gravity.FILL_HORIZONTAL, 0, 0, 0, 72);
+        contentView.addView(bottomOverlayChatHint, params);
+
 
         if (currentUser != null && currentUser.bot && currentUser.id != UserObject.VERIFY && !UserObject.isDeleted(currentUser) && !UserObject.isReplyUser(currentUser) && !isInScheduleMode() && chatMode != MODE_PINNED && chatMode != MODE_SAVED && !isReport()) {
             bottomOverlayStartButton.setVisibility(View.VISIBLE);
             bottomOverlayChat.setVisibility(View.VISIBLE);
+
+
+            bottomOverlayChatHint.show();
         }
 
         bottomOverlayLinksText = new LinkSpanDrawable.LinksTextView(context, themeDelegate);
@@ -27997,6 +28045,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
                 if (getParentActivity() == null) {
                     return false;
                 }
+
                 VoIPService sharedInstance = VoIPService.getSharedInstance();
                 if (sharedInstance != null) {
                     if (sharedInstance.groupCall != null && message.messageOwner.action.call.id == sharedInstance.groupCall.call.id) {
@@ -30024,6 +30073,7 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
     private ValueAnimator scrimViewAlphaAnimator;
 
     private void closeMenu(boolean hideDim) {
+
         scrimPopupWindowHideDimOnDismiss = hideDim;
         if (scrimPopupWindow != null) {
             scrimPopupWindow.dismiss();
@@ -33206,7 +33256,63 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
         }
     }
 
+
+    private class SessionManagerListenerImpl implements SessionManagerListener<CastSession> {
+        @Override
+        public void onSessionStarting(CastSession session) {
+            try {
+                throw new Exception("onSessionStarting");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        public void onSessionStarted(CastSession session, String sessionId) {
+
+            try {
+                throw new Exception("onSessionStarted");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        public void onSessionStartFailed(CastSession session, int error) {
+            //int castReasonCode = mCastContext.getCastReasonCodeForCastStatusCode(error);
+            // Handle error
+        }
+        @Override
+        public void onSessionSuspended(CastSession session, int reason) {}
+        @Override
+        public void onSessionResuming(CastSession session, String sessionId) {}
+        @Override
+        public void onSessionResumed(CastSession session, boolean wasSuspended) {
+
+        }
+        @Override
+        public void onSessionResumeFailed(CastSession session, int error) {}
+        @Override
+        public void onSessionEnding(CastSession session) {
+
+            try {
+                throw new Exception("onSessionEnding");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        @Override
+        public void onSessionEnded(CastSession session, int error) {
+
+            try {
+                throw new Exception("onSessionEnded");
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     void openPhotoViewerForMessage(ChatMessageCell cell, MessageObject message) {
+
+
         if (cell == null) {
             int count = chatListView.getChildCount();
             for (int a = 0; a < count; a++) {
@@ -35347,6 +35453,169 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
             }
         }
 
+        public void openQuickShare() {
+            if (quickShareLayout == null) {
+                quickShareLayout = new RelativeLayout(getContext());
+            }
+            if (quickShareButtonLayout == null) {
+                quickShareButtonLayout = new LinearLayout(getContext());
+            }
+
+            closeQuickShare();
+
+
+            quickShareButtonLayout.setOrientation(LinearLayout.HORIZONTAL);
+
+            GradientDrawable rectangleBackground = new GradientDrawable();
+            rectangleBackground.setShape(GradientDrawable.RECTANGLE);
+            rectangleBackground.setColor(Color.WHITE);
+            rectangleBackground.setCornerRadius(AndroidUtilities.dp(70));
+            rectangleBackground.setStroke(1, Color.GRAY);
+            quickShareButtonLayout.setBackground(rectangleBackground);
+
+            quickShareLayout.addView(quickShareButtonLayout);
+            contentView.addView(quickShareLayout);
+        }
+
+        public void closeQuickShare() {
+            quickShareButtonLayout.removeAllViews();
+            quickShareLayout.removeAllViews();
+            contentView.removeView(quickShareLayout);
+        }
+
+        @SuppressLint("ClickableViewAccessibility")
+        @Override
+        public void didLongPressSideButton(ChatMessageCell cell, float x, float y) {
+            openQuickShare();
+
+
+            int[] chatListViewLocation = new int[2];
+            chatListView.getLocationOnScreen(chatListViewLocation);
+
+            int[] cellLocation = new int[2];
+            cell.getLocationOnScreen(cellLocation);
+
+            ArrayList<TLRPC.Dialog> dialogs = new ArrayList<>();
+            LongSparseArray<TLRPC.Dialog> dialogsMap = new LongSparseArray<>();
+
+            long selfUserId = UserConfig.getInstance(currentAccount).clientUserId;
+
+            if (!MessagesController.getInstance(currentAccount).dialogsForward.isEmpty()) {
+                TLRPC.Dialog dialog = MessagesController.getInstance(currentAccount).dialogsForward.get(0);
+                dialogs.add(dialog);
+                dialogsMap.put(dialog.id, dialog);
+            }
+            ArrayList<TLRPC.Dialog> archivedDialogs = new ArrayList<>();
+            ArrayList<TLRPC.Dialog> allDialogs = MessagesController.getInstance(currentAccount).getAllDialogs();
+            for (int a = 0; a < allDialogs.size(); a++) {
+                TLRPC.Dialog dialog = allDialogs.get(a);
+                if (!(dialog instanceof TLRPC.TL_dialog)) {
+                    continue;
+                }
+                if (dialog.id == selfUserId) {
+                    continue;
+                }
+                if (!DialogObject.isEncryptedDialog(dialog.id)) {
+                    if (DialogObject.isUserDialog(dialog.id)) {
+                        if (dialog.folder_id == 1) {
+                            archivedDialogs.add(dialog);
+                        } else {
+                            dialogs.add(dialog);
+                        }
+                        dialogsMap.put(dialog.id, dialog);
+                    } else {
+                        TLRPC.Chat chat = MessagesController.getInstance(currentAccount).getChat(-dialog.id);
+                        if (!(chat == null || ChatObject.isNotInChat(chat) || chat.gigagroup && !ChatObject.hasAdminRights(chat) || ChatObject.isChannel(chat) && !chat.creator && (chat.admin_rights == null || !chat.admin_rights.post_messages) && !chat.megagroup)) {
+                            if (dialog.folder_id == 1) {
+                                archivedDialogs.add(dialog);
+                            } else {
+                                dialogs.add(dialog);
+                            }
+                            dialogsMap.put(dialog.id, dialog);
+                        }
+                    }
+                }
+            }
+            dialogs.addAll(archivedDialogs);
+            if (dialogs.size() > MAX_QUICK_SHARE_ITEMS) {
+                dialogs = new ArrayList<>(dialogs.subList(0, MAX_QUICK_SHARE_ITEMS));
+            }
+
+            quickShareButtonLayout.setLayoutParams(new RelativeLayout.LayoutParams(AndroidUtilities.dp(dialogs.size() * 76), AndroidUtilities.dp(70)));
+
+            RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) quickShareButtonLayout.getLayoutParams();
+            layoutParams.leftMargin = cellLocation[0] - chatListViewLocation[0] + cell.getWidth() - AndroidUtilities.dp(dialogs.size() * 76 + 10) ;
+            layoutParams.topMargin = cellLocation[1] - chatListViewLocation[1] + cell.getHeight() - AndroidUtilities.dp(60 + 60) ;
+            quickShareButtonLayout.setLayoutParams(layoutParams);
+
+            MessageObject messageObject = cell.getMessageObject();
+            ArrayList<MessageObject> messages = new ArrayList<>();
+            messages.add(messageObject);
+
+            for (int i = 0; i < dialogs.size(); i++) {
+                TLRPC.Dialog dialog = dialogs.get(i);
+                List<TLRPC.TL_forumTopic> topics = MessagesController.getInstance(currentAccount).getTopicsController().getTopics(-dialog.id);
+
+                ShareDialogCell view = new ShareDialogCell(getContext(), ShareDialogCell.TYPE_SHARE, themeDelegate) {
+                };
+                view.setDialog(dialog.id, false, null);
+
+
+                LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(
+                        AndroidUtilities.dp(60),
+                        AndroidUtilities.dp(60)
+                );
+                buttonParams.setMargins(AndroidUtilities.dp(8), 0, AndroidUtilities.dp(8), 0);
+
+
+                view.setOnTouchListener(new View.OnTouchListener() {
+                    @Override
+                    public boolean onTouch(View v, MotionEvent event) {
+                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                            SendMessagesHelper.getInstance(currentAccount).sendMessage(
+                                    messages,
+                                    dialog.id,
+                                    false,
+                                    false,
+                                    false,
+                                    0,
+                                    null
+                            );
+
+                            closeQuickShare();
+                            long did = dialog.id;
+                            SpannableStringBuilder text;
+
+                            if (did == UserConfig.getInstance(UserConfig.selectedAccount).clientUserId) {
+                                text = AndroidUtilities.replaceSingleTag(LocaleController.getString(R.string.FwdMessageToSavedMessages), SavedMessagesController::openSavedMessages);
+                            } else {
+                                if (DialogObject.isChatDialog(did)) {
+                                    TLRPC.Chat chat = MessagesController.getInstance(UserConfig.selectedAccount).getChat(-did);
+                                    text = AndroidUtilities.replaceTags(LocaleController.formatString("FwdMessageToGroup", R.string.FwdMessageToGroup, chat.title));
+                                } else {
+                                    TLRPC.User user = MessagesController.getInstance(UserConfig.selectedAccount).getUser(did);
+                                    text = AndroidUtilities.replaceTags(LocaleController.formatString("FwdMessageToUser", R.string.FwdMessageToUser, UserObject.getFirstName(user)));
+                                }
+                            }
+
+                            if (text != null) {
+                                BulletinFactory.of(ChatActivity.this).createSuccessBulletin(text).show();
+                            }
+
+                            return true;
+                        } else if (event.getAction() == MotionEvent.ACTION_UP || event.getAction() == MotionEvent.ACTION_CANCEL) {
+                            return true;
+                        }
+                        return false;
+                    }
+                });
+
+                quickShareButtonLayout.addView(view, buttonParams);
+            }
+
+        }
+
+
         @Override
         public boolean needPlayMessage(ChatMessageCell cell, MessageObject messageObject, boolean muted) {
             if (messageObject.isVoiceOnce() || messageObject.isRoundOnce()) {
@@ -35426,6 +35695,8 @@ public class ChatActivity extends BaseFragment implements NotificationCenter.Not
 
         @Override
         public void didPressOther(ChatMessageCell cell, float otherX, float otherY) {
+            closeQuickShare();
+
             MessageObject messageObject = cell.getMessageObject();
             if (messageObject.type == MessageObject.TYPE_PHONE_CALL) {
                 if (currentUser != null) {

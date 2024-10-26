@@ -8,11 +8,11 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
-import org.webrtc.CalledByNative;
-import org.webrtc.Loggable;
-import org.webrtc.Logging.Severity;
+import tg.org.webrtc.CalledByNative;
+import tg.org.webrtc.Loggable;
+import tg.org.webrtc.Logging.Severity;
 
 class JNILogging {
   private final Loggable loggable;

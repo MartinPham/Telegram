@@ -8,11 +8,11 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import androidx.annotation.Nullable;
 import java.nio.ByteBuffer;
-import org.webrtc.VideoFrame.I420Buffer;
+import tg.org.webrtc.VideoFrame.I420Buffer;
 
 /** Implementation of VideoFrame.I420Buffer backed by Java direct byte buffers. */
 public class JavaI420Buffer implements VideoFrame.I420Buffer {

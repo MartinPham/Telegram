@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.voiceengine;
+package tg.org.webrtc.voiceengine;
 
 import static android.media.AudioManager.MODE_IN_CALL;
 import static android.media.AudioManager.MODE_IN_COMMUNICATION;
@@ -23,8 +23,8 @@ import android.os.Build;
 import java.lang.Thread;
 import java.util.Arrays;
 import java.util.List;
-import org.webrtc.ContextUtils;
-import org.webrtc.Logging;
+import tg.org.webrtc.ContextUtils;
+import tg.org.webrtc.Logging;
 
 public final class WebRtcAudioUtils {
   private static final String TAG = "WebRtcAudioUtils";

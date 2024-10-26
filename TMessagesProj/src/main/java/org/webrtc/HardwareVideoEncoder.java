@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import android.annotation.TargetApi;
 import android.media.MediaCodec;
@@ -24,7 +24,7 @@ import java.util.Map;
 import java.util.concurrent.BlockingDeque;
 import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.TimeUnit;
-import org.webrtc.ThreadUtils.ThreadChecker;
+import tg.org.webrtc.ThreadUtils.ThreadChecker;
 
 /**
  * Android hardware video encoder.

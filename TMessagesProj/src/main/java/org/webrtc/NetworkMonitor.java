@@ -8,14 +8,14 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import android.content.Context;
 import android.os.Build;
 import androidx.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import org.webrtc.NetworkChangeDetector;
+import tg.org.webrtc.NetworkChangeDetector;
 
 /**
  * Borrowed from Chromium's

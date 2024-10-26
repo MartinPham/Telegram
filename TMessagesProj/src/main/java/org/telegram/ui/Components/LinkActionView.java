@@ -219,6 +219,10 @@ public class LinkActionView extends LinearLayout {
         });
 
         optionsView.setOnClickListener(view -> {
+            if (hideRevokeOption) {
+                showQrCode();
+                return;
+            }
             if (actionBarPopupWindow != null) {
                 return;
             }
@@ -456,7 +460,9 @@ public class LinkActionView extends LinearLayout {
         if (hideRevokeOption != b) {
             hideRevokeOption = b;
             optionsView.setVisibility(View.VISIBLE);
-            optionsView.setImageDrawable(ContextCompat.getDrawable(optionsView.getContext(), R.drawable.ic_ab_other));
+
+            optionsView.setImageDrawable(ContextCompat.getDrawable(optionsView.getContext(), R.drawable.msg_qrcode));
+            optionsView.setContentDescription(LocaleController.getString(R.string.GetQRCode));
         }
     }
 

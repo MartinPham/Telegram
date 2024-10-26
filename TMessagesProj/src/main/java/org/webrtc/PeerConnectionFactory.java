@@ -8,16 +8,16 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import android.content.Context;
 import android.os.Process;
 import androidx.annotation.Nullable;
 import java.util.List;
-import org.webrtc.Logging.Severity;
-import org.webrtc.PeerConnection;
-import org.webrtc.audio.AudioDeviceModule;
-import org.webrtc.audio.JavaAudioDeviceModule;
+import tg.org.webrtc.Logging.Severity;
+import tg.org.webrtc.PeerConnection;
+import tg.org.webrtc.audio.AudioDeviceModule;
+import tg.org.webrtc.audio.JavaAudioDeviceModule;
 
 /**
  * Java wrapper for a C++ PeerConnectionFactoryInterface.  Main entry point to

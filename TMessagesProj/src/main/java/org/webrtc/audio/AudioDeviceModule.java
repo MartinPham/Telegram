@@ -8,7 +8,7 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc.audio;
+package tg.org.webrtc.audio;
 
 /**
  * This interface is a thin wrapper on top of a native C++ webrtc::AudioDeviceModule (ADM). The

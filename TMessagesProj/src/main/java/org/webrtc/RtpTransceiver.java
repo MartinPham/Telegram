@@ -8,13 +8,13 @@
  *  be found in the AUTHORS file in the root of the source tree.
  */
 
-package org.webrtc;
+package tg.org.webrtc;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import org.webrtc.MediaStreamTrack;
-import org.webrtc.RtpParameters;
+import tg.org.webrtc.MediaStreamTrack;
+import tg.org.webrtc.RtpParameters;
 
 /**
  * Java wrapper for a C++ RtpTransceiverInterface.
