@@ -5720,7 +5720,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
         pipItem = menu.addItem(gallery_menu_pip, R.drawable.ic_goinline);
         pipItem.setContentDescription(getString("AccDescrPipMode", R.string.AccDescrPipMode));
         castItem = menu.addItem(gallery_menu_cast, R.drawable.cast_ic_notification_on);
-        castItem.setContentDescription(getString("AccDescrPipMode", R.string.AccDescrPipMode));
+        castItem.setContentDescription(getString("AccDescrPipMode", R.string.AccDescrCast));
 
 
         castRtc = new CastRTC(activityContext, message -> {

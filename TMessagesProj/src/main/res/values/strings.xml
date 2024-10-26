@@ -8182,4 +8182,5 @@
     <string name="BotStartHint">Tap here to use this bot</string>
     <string name="VoipGroupNotifyMe">Notify Me</string>
     <string name="VoipGroupNotifyMessage">You will be notified when the live stream starts</string>
+    <string name="AccDescrCast">Cast</string>
 </resources>

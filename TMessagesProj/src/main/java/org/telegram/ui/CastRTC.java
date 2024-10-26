@@ -64,12 +64,12 @@ public class CastRTC {
     int maxMessageSize = 1024;
     Consumer<String> callback;
 
-    CastRTC(Context ctx, Consumer<String> cb) {
+    public CastRTC(Context ctx, Consumer<String> cb) {
         context = ctx;
         callback = cb;
     }
 
-    MediaRouteButton createCastButton() {
+    public MediaRouteButton createCastButton() {
         MediaRouteButton mediaRouteButton = new MediaRouteButton(context);
         mediaRouteButton.setAlwaysVisible(true);
         routeSelector = new MediaRouteSelector.Builder()
@@ -97,11 +97,11 @@ public class CastRTC {
         return mediaRouteButton;
     }
 
-    void decorateCastButton(MediaRouteButton mediaRouteButton) {
+    public void decorateCastButton(MediaRouteButton mediaRouteButton) {
         CastButtonFactory.setUpMediaRouteButton(context, mediaRouteButton);
     }
 
-    void setupCast() {
+    public void setupCast() {
         castContext = CastContext.getSharedInstance(context);
         castPlayer = new CastPlayer(castContext);
         sessionManager = castContext.getSessionManager();
@@ -459,7 +459,7 @@ public class CastRTC {
     }
 
 
-    void playMedia(byte[] file, String fileMime, String fileTitle) {
+    public void playMedia(byte[] file, String fileMime, String fileTitle) {
         media = file;
         mime = fileMime;
         title = fileTitle;

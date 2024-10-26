@@ -14,6 +14,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -54,6 +55,7 @@ import androidx.core.graphics.ColorUtils;
 import androidx.dynamicanimation.animation.FloatValueHolder;
 import androidx.dynamicanimation.animation.SpringAnimation;
 import androidx.dynamicanimation.animation.SpringForce;
+import androidx.mediarouter.app.MediaRouteButton;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -96,13 +98,17 @@ import org.telegram.ui.ActionBar.SimpleTextView;
 import org.telegram.ui.ActionBar.Theme;
 import org.telegram.ui.ActionBar.ThemeDescription;
 import org.telegram.ui.Adapters.FiltersView;
+import org.telegram.ui.CastRTC;
 import org.telegram.ui.Cells.AudioPlayerCell;
 import org.telegram.ui.ChatActivity;
 import org.telegram.ui.Components.Forum.ForumUtilities;
 import org.telegram.ui.DialogsActivity;
 import org.telegram.ui.LaunchActivity;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -128,6 +134,11 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
     private RLottieImageView prevButton;
     private RLottieImageView nextButton;
     private ClippingTextViewSwitcher authorTextView;
+    private ActionBarMenuItem castButton;
+
+    private MediaRouteButton mediaRouteButton;
+    private CastRTC castRtc;
+
     private ActionBarMenuItem optionsButton;
     private LineProgressView progressView;
     private SeekBarView seekBarView;
@@ -149,7 +160,7 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
     private BackupImageView bigAlbumConver;
     private ActionBarMenuItem searchItem;
     private boolean blurredAnimationInProgress;
-    private View[] buttons = new View[5];
+    private View[] buttons = new View[6];
     private SpringAnimation seekBarBufferSpring;
 
     private boolean draggingSeekBar;
@@ -753,8 +764,8 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         FrameLayout bottomView = new FrameLayout(context) {
             @Override
             protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-                int dist = ((right - left) - AndroidUtilities.dp(8 + 48 * 5)) / 4;
-                for (int a = 0; a < 5; a++) {
+                int dist = ((right - left) - AndroidUtilities.dp(8 + 48 * 6)) / 5;
+                for (int a = 0; a < 6; a++) {
                     int l = AndroidUtilities.dp(4 + 48 * a) + dist * a;
                     int t = AndroidUtilities.dp(9);
                     buttons[a].layout(l, t, l + buttons[a].getMeasuredWidth(), t + buttons[a].getMeasuredHeight());
@@ -1083,7 +1094,28 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         bottomView.addView(nextButton, LayoutHelper.createFrame(48, 48, Gravity.LEFT | Gravity.TOP));
         nextButton.setContentDescription(LocaleController.getString(R.string.Next));
 
-        buttons[4] = optionsButton = new ActionBarMenuItem(context, null, 0, iconColor, false, resourcesProvider);
+        buttons[4] = castButton = new ActionBarMenuItem(context, null, 0, iconColor, false, resourcesProvider);
+        castButton.setLongClickEnabled(false);
+        castButton.setShowSubmenuByMove(false);
+        castButton.setIcon(R.drawable.cast_ic_notification_on);
+        castButton.setAdditionalYOffset(-AndroidUtilities.dp(157));
+        if (Build.VERSION.SDK_INT >= 21) {
+            castButton.setBackgroundDrawable(Theme.createSelectorDrawable(getThemedColor(Theme.key_listSelector), 1, AndroidUtilities.dp(18)));
+        }
+        bottomView.addView(castButton, LayoutHelper.createFrame(48, 48, Gravity.LEFT | Gravity.TOP));
+        castButton.setOnClickListener(v -> mediaRouteButton.showDialog());
+        castButton.setContentDescription(LocaleController.getString(R.string.AccDescrCast));
+
+
+        castRtc = new CastRTC(context, message -> {
+            castAudioFile(FileProvider.getUriForFile(ApplicationLoader.applicationContext, ApplicationLoader.getApplicationId() + ".provider", FileLoader.getInstance(currentAccount).getPathToMessage(messageObject.messageOwner)));
+        });
+        mediaRouteButton = castRtc.createCastButton();
+        containerView.addView(mediaRouteButton);
+        castRtc.decorateCastButton(mediaRouteButton);
+        castRtc.setupCast();
+
+        buttons[5] = optionsButton = new ActionBarMenuItem(context, null, 0, iconColor, false, resourcesProvider);
         optionsButton.setLongClickEnabled(false);
         optionsButton.setShowSubmenuByMove(false);
         optionsButton.setIcon(R.drawable.ic_ab_other);
@@ -1254,6 +1286,30 @@ public class AudioPlayerAlert extends BottomSheet implements NotificationCenter.
         updateTitle(false);
         updateRepeatButton();
         updateEmptyView();
+    }
+
+    private void castAudioFile(Uri uri) {
+
+        ContentResolver contentResolver = getContext().getContentResolver();
+
+        try (InputStream inputStream = contentResolver.openInputStream(uri);
+             ByteArrayOutputStream buffer = new ByteArrayOutputStream()) {
+
+            if (inputStream == null) {
+                throw new IOException("Unable to open InputStream for URI: " + uri);
+            }
+
+            byte[] data = new byte[1024];
+            int nRead;
+            while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                buffer.write(data, 0, nRead);
+            }
+            byte[] file = buffer.toByteArray();
+
+            castRtc.playMedia(file, "audio/mp3", "Audio");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
