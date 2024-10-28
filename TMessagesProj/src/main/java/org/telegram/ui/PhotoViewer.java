@@ -5724,7 +5724,7 @@ public class PhotoViewer implements NotificationCenter.NotificationCenterDelegat
 
 
         castRtc = new CastRTC(activityContext, message -> {
-            castVideoFile(currentPlayingVideoFile);
+            castVideoFile(FileProvider.getUriForFile(ApplicationLoader.applicationContext, ApplicationLoader.getApplicationId() + ".provider", FileLoader.getInstance(currentAccount).getPathToMessage(currentMessageObject.messageOwner)));
         });
         mediaRouteButton = castRtc.createCastButton();
         containerView.addView(mediaRouteButton);

@@ -45,6 +45,25 @@
     },
     {
       "client_info": {
+        "mobilesdk_app_id": "1:318439586932:android:b616107c0cbe2d426e2521",
+        "android_client_info": {
+          "package_name": "org.telegram_contest.messenger"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDAQVgf4GqWuc6kmVfgEWamQ-fU5IT5E8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:318439586932:android:d85407b4d8bf62886e2521",
         "android_client_info": {
           "package_name": "org.telegram_contest.messenger.beta"
